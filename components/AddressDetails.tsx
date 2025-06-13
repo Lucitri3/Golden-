@@ -3,7 +3,13 @@
 import { useState, useEffect } from 'react';
 import { Wallet, Landmark, History } from 'lucide-react';
 
-// A reusable Card component for consistent styling
+// Define a clear type for our data structure
+type AddressData = {
+  address: string;
+  balance: number;
+  signatures: string[];
+};
+
 function InfoCard({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) {
   return (
     <div className="bg-surface border border-border rounded-lg p-5">
@@ -17,7 +23,8 @@ function InfoCard({ title, icon, children }: { title: string, icon: React.ReactN
 }
 
 export default function AddressDetails({ id }: { id: string }) {
-  const [data, setData] = useState<any>(null);
+  // Use our new AddressData type here instead of 'any'
+  const [data, setData] = useState<AddressData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,7 +36,7 @@ export default function AddressDetails({ id }: { id: string }) {
         return res.json();
       })
       .then(result => setData(result))
-      .catch(err => setError(err.message))
+      .catch(err => setError((err as Error).message))
       .finally(() => setIsLoading(false));
   }, [id]);
 
@@ -53,6 +60,7 @@ export default function AddressDetails({ id }: { id: string }) {
 
       <InfoCard title="Recent History" icon={<History className="text-primary" />}>
         <ul className="space-y-2 font-mono text-sm">
+          {/* Add the ': string' type to 'sig' to satisfy the linter */}
           {data.signatures.map((sig: string) => (
             <li key={sig} className="p-3 bg-background rounded-md truncate hover:bg-border transition-colors">
               <a href={`/tx/${sig}`} className="text-text-secondary hover:text-primary">{sig}</a>

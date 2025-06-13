@@ -3,11 +3,15 @@
 @tailwind utilities;
 
 body {
-  background-color: #0D1117; /* Direct value for build stability */
-  color: #c9d1d9;            /* Direct value for build stability */
+  background-color: #0D1117;
+  color: #c9d1d9;
 }
 
+/* A new utility class we can use for a subtle text gradient */
 .text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-secondary to-primary;
+  background-image: linear-gradient(to right, theme('colors.secondary'), theme('colors.primary'));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
